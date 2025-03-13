@@ -1,0 +1,26 @@
+import { page } from "common.slint";
+import { Register } from "register.slint";
+import { Login } from "login.slint";
+import { Home } from "home.slint";
+import "../BebasNeue-Regular.ttf";
+
+
+export component MainWindow inherits Window {
+    title: "PhamiJam";
+    min-width: 1024px;
+    min-height: 576px;
+    default-font-family: "Lexend";
+    icon: @image-url(".././assets/P-modified.png");
+    background: #dba43a;
+    main := HorizontalLayout {
+        if page.activepage == 0: Register {
+            visible: true;
+        }
+        if page.activepage == 1: Login {
+            visible: true;
+        }
+        if page.activepage == 2:  Home {
+            visible: true;
+        }
+    }
+}

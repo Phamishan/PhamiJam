@@ -1,6 +1,6 @@
 import * as slint from "slint-ui";
 
-let ui = slint.loadFile("ui/register.slint");
-let register = new ui.RegisterScreen();
+let ui = slint.loadFile("ui/main.slint");
+let mainWindow = new ui.MainWindow();
 
-await register.run();
+await mainWindow.run();

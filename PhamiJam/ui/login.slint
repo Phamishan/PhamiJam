@@ -1,0 +1,57 @@
+import { Button, VerticalBox, HorizontalBox, LineEdit } from "std-widgets.slint";
+import { page } from "common.slint";
+
+export component Login inherits Window {
+    VerticalBox {
+        alignment: center;
+        HorizontalBox {
+            alignment: center;
+            Rectangle {
+                background: #b5832e;
+                width: 250px;
+                height: 400px;
+                border-radius: 25px;
+                LineEdit {
+                    placeholder-text: "Username";
+                    width: 200px;
+                    x: 25px;
+                    y: 100px;
+                }
+
+                LineEdit {
+                    placeholder-text: "Password";
+                    input-type: password;
+                    width: 200px;
+                    x: 25px;
+                    y: 150px;
+                }
+
+                Rectangle {
+                    width: 200px;
+                    x: 25px;
+                    y: 80px;
+                    Text {
+                        text: "Don't have an account? Click here!";
+                    }
+
+                    TouchArea {
+                        width: 150px;
+                        height: 25px;
+                        clicked => {
+                            page.activepage = 0;
+                        }
+                    }
+                }
+
+                Button {
+                    text: "Login";
+                    x: 97px;
+                    y: 350px;
+                    clicked => {
+                        page.activepage = 2;
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,19 +1,8 @@
 import { Button, VerticalBox, HorizontalBox, LineEdit } from "std-widgets.slint";
-import { HomeScreen } from "home_screen.slint";
-import { test } from "common.slint";
+import {page} from "common.slint";
 
-export component RegisterScreen inherits Window {
-    title: "PhamiJam";
-    min-width: 1024px;
-    min-height: 576px;
-    icon: @image-url(".././assets/P-modified.png");
+export component Register inherits Window {
     background: #dba43a;
-    main := HorizontalLayout {
-        if test.activepage == 1: HomeScreen {
-            visible: true;
-        }
-    }
-
     VerticalBox {
         alignment: center;
         HorizontalBox {
@@ -27,7 +16,7 @@ export component RegisterScreen inherits Window {
                     placeholder-text: "Username";
                     width: 200px;
                     x: 25px;
-                    y: 50px;
+                    y: 100px;
                 }
 
                 LineEdit {
@@ -45,12 +34,29 @@ export component RegisterScreen inherits Window {
                     y: 200px;
                 }
 
+                Rectangle {
+                    width: 200px;
+                    x: 25px;
+                    y: 80px;
+                    Text {
+                        text: "Have an account? Click here!";
+                    }
+
+                    TouchArea {
+                        width: 150px;
+                        height: 25px;
+                        clicked => {
+                            page.activepage = 1;
+                        }
+                    }
+                }
+
                 Button {
                     text: "Login";
                     x: 97px;
                     y: 350px;
                     clicked => {
-                        test.activepage = 1;
+                        page.activepage = 2;
                     }
                 }
             }
