@@ -1,7 +1,7 @@
 import { Button, VerticalBox, HorizontalBox, ProgressIndicator } from "std-widgets.slint";
 import { page } from "common.slint";
 
-export component Home inherits Window {
+export component Profile inherits Window {
     property <float> count: 0;
     property <bool> paused: true;
     property <string> songName: "SANG";
@@ -26,8 +26,7 @@ export component Home inherits Window {
                     padding: 25px;
                     alignment: space-around;
                     Button {
-                        icon: @image-url(".././assets/home.png");
-                        //text: "Home";
+                        text: "Home";
                         clicked() => {
                             page.activepage = 2;
                         }
@@ -39,8 +38,7 @@ export component Home inherits Window {
                     }
 
                     Button {
-                        icon: @image-url(".././assets/profile.png");
-                        //text: "Profile";
+                        text: "Profile";
                         clicked() => {
                             page.activepage = 3;
                         }

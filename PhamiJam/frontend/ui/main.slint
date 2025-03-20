@@ -2,6 +2,7 @@ import { page } from "common.slint";
 import { Register } from "register.slint";
 import { Login } from "login.slint";
 import { Home } from "home.slint";
+import { Profile } from "profile.slint";
 
 export component MainWindow inherits Window {
     title: "PhamiJam";
@@ -18,6 +19,9 @@ export component MainWindow inherits Window {
             visible: true;
         }
         if page.activepage == 2:  Home {
+            visible: true;
+        }
+        if page.activepage == 3:  Profile {
             visible: true;
         }
     }
