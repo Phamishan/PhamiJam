@@ -1,5 +1,5 @@
 import { Button, VerticalBox, HorizontalBox, LineEdit } from "std-widgets.slint";
-import { page } from "common.slint";
+import { Page } from "common.slint";
 
 export component Login inherits Window {
     VerticalBox {
@@ -38,7 +38,7 @@ export component Login inherits Window {
                         width: 150px;
                         height: 25px;
                         clicked => {
-                            page.activepage = 0;
+                            Page.activePage = 0;
                         }
                     }
                 }
@@ -48,7 +48,7 @@ export component Login inherits Window {
                     x: 97px;
                     y: 350px;
                     clicked => {
-                        page.activepage = 2;
+                        Page.activePage = 2;
                     }
                 }
             }

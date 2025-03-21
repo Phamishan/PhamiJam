@@ -1,4 +1,4 @@
-import { page } from "common.slint";
+import { Page } from "common.slint";
 import { Register } from "register.slint";
 import { Login } from "login.slint";
 import { Home } from "home.slint";
@@ -12,16 +12,16 @@ export component MainWindow inherits Window {
     icon: @image-url(".././assets/P-modified.png");
     background: #dba43a;
     main := HorizontalLayout {
-        if page.activepage == 0: Register {
+        if Page.activePage == 0: Register {
             visible: true;
         }
-        if page.activepage == 1: Login {
+        if Page.activePage == 1: Login {
             visible: true;
         }
-        if page.activepage == 2:  Home {
+        if Page.activePage == 2:  Home {
             visible: true;
         }
-        if page.activepage == 3:  Profile {
+        if Page.activePage == 3:  Profile {
             visible: true;
         }
     }

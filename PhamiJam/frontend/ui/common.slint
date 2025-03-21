@@ -1,4 +1,43 @@
+import { Button } from "std-widgets.slint";
+export global Page {
+    in-out property <int> activePage: 0;
+}
 
-export global page {
-    in-out property <int> activepage: 0;
+export component Divider {
+    Rectangle {
+        background: #3b3a3a;
+        height: 5px;
+    }
+}
+
+export component HomeBtn {
+    Button {
+        icon: @image-url(".././assets/home.png");
+        text: "Home";
+        clicked() => {
+            Page.activePage = 2;
+        }
+    }
+}
+
+export component ProfileBtn {
+    Button {
+        icon: @image-url(".././assets/profile.png");
+        text: "Profile";
+        clicked() => {
+            Page.activePage = 3;
+        }
+    }
+}
+
+export component LibraryBtn {
+    Button {
+        text: "Library";
+    }
+}
+
+export component RecentPlaylistBtn {
+    Button {
+        text: "%{recent playlist}%";
+    }
 }

@@ -1,5 +1,5 @@
-import { Button, VerticalBox, HorizontalBox, ProgressIndicator } from "std-widgets.slint";
-import { page } from "common.slint";
+import { Button, VerticalBox, HorizontalBox, ProgressIndicator, GridBox } from "std-widgets.slint";
+import { Page, Divider, HomeBtn, ProfileBtn, LibraryBtn, RecentPlaylistBtn } from "common.slint";
 
 export component Profile inherits Window {
     property <float> count: 0;
@@ -25,45 +25,41 @@ export component Profile inherits Window {
                 VerticalBox {
                     padding: 25px;
                     alignment: space-around;
-                    Button {
-                        text: "Home";
-                        clicked() => {
-                            page.activepage = 2;
+                    HomeBtn { }
+
+                    Divider { }
+
+                    ProfileBtn { }
+
+                    Divider { }
+
+                    LibraryBtn { }
+
+                    Divider { }
+
+                    RecentPlaylistBtn { }
+                }
+            }
+
+            Rectangle {
+                GridBox {
+                    Row {
+                        Image {
+                            row: 2;
+                            width: 250px;
+                            height: 250px;
+                            source: @image-url(".././assets/catPHOENIX.jpg");
                         }
-                    }
 
-                    Rectangle {
-                        background: #3b3a3a;
-                        height: 5px;
-                    }
-
-                    Button {
-                        text: "Profile";
-                        clicked() => {
-                            page.activepage = 3;
+                        Text {
+                            text: "Phamishan";
+                            font-size: 24px;
                         }
-                    }
-
-                    Rectangle {
-                        background: #3b3a3a;
-                        height: 5px;
-                    }
-
-                    Text {
-                        text: "Library";
-                        horizontal-alignment: center;
-                    }
-
-                    Rectangle {
-                        background: #3b3a3a;
-                        height: 5px;
-                    }
-
-                    Text {
-                        text: "%{recent playlist}%";
-                        horizontal-alignment: center;
                     }
                 }
+
+                border-width: 10px;
+                border-color: Colors.red;
             }
 
             Rectangle {

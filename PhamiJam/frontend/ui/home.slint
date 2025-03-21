@@ -1,5 +1,5 @@
 import { Button, VerticalBox, HorizontalBox, ProgressIndicator } from "std-widgets.slint";
-import { page } from "common.slint";
+import { Page, Divider, HomeBtn, ProfileBtn, LibraryBtn, RecentPlaylistBtn } from "common.slint";
 
 export component Home inherits Window {
     property <float> count: 0;
@@ -25,46 +25,19 @@ export component Home inherits Window {
                 VerticalBox {
                     padding: 25px;
                     alignment: space-around;
-                    Button {
-                        icon: @image-url(".././assets/home.png");
-                        //text: "Home";
-                        clicked() => {
-                            page.activepage = 2;
-                        }
-                    }
+                    HomeBtn { }
 
-                    Rectangle {
-                        background: #3b3a3a;
-                        height: 5px;
-                    }
+                    Divider { }
 
-                    Button {
-                        icon: @image-url(".././assets/profile.png");
-                        //text: "Profile";
-                        clicked() => {
-                            page.activepage = 3;
-                        }
-                    }
+                    ProfileBtn { }
 
-                    Rectangle {
-                        background: #3b3a3a;
-                        height: 5px;
-                    }
+                    Divider { }
 
-                    Text {
-                        text: "Library";
-                        horizontal-alignment: center;
-                    }
+                    LibraryBtn { }
 
-                    Rectangle {
-                        background: #3b3a3a;
-                        height: 5px;
-                    }
+                    Divider { }
 
-                    Text {
-                        text: "%{recent playlist}%";
-                        horizontal-alignment: center;
-                    }
+                    RecentPlaylistBtn { }
                 }
             }
 
