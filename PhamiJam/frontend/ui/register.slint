@@ -1,5 +1,5 @@
 import { Button, VerticalBox, HorizontalBox, LineEdit } from "std-widgets.slint";
-import {Page} from "common.slint";
+import {globalVariables} from "common.slint";
 
 export component Register inherits Window {
     background: #dba43a;
@@ -46,7 +46,7 @@ export component Register inherits Window {
                         width: 150px;
                         height: 25px;
                         clicked => {
-                            Page.activePage = 1;
+                            globalVariables.activePage = 1;
                         }
                     }
                 }
@@ -56,7 +56,7 @@ export component Register inherits Window {
                     x: 97px;
                     y: 350px;
                     clicked => {
-                        Page.activePage = 2;
+                        globalVariables.activePage = 2;
                     }
                 }
             }

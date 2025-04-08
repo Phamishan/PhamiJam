@@ -1,89 +1,27 @@
-import { Button, VerticalBox, HorizontalBox, ProgressIndicator } from "std-widgets.slint";
-import { Page, Divider, HomeBtn, ProfileBtn, LibraryBtn, RecentPlaylistBtn } from "common.slint";
+import { Button, VerticalBox, HorizontalBox, ProgressIndicator, GridBox } from "std-widgets.slint";
+import { globalVariables, Divider, HomeBtn, ProfileBtn, LibraryBtn, RecentPlaylistBtn, Interface } from "common.slint";
 
 export component Home inherits Window {
-    property <float> count: 0;
-    property <bool> paused: true;
-    property <string> songName: "SANG";
-    timer := Timer {
-        interval: 1ms;
-        running: false;
-        triggered() => {
-            if count >= 10 {
-                self.running = false;
-            }
-            count = count + 0.01;
-            debug(count);
-        }
-    }
-
     GridLayout {
         Row {
-            Rectangle {
-                background: #121212;
-                width: 150px;
-                VerticalBox {
-                    padding: 25px;
-                    alignment: space-around;
-                    HomeBtn { }
-
-                    Divider { }
-
-                    ProfileBtn { }
-
-                    Divider { }
-
-                    LibraryBtn { }
-
-                    Divider { }
-
-                    RecentPlaylistBtn { }
-                }
-            }
-
-            Rectangle {
-                HorizontalBox {
-                    padding-top: 30px;
-                    alignment: center;
-                    Text {
-                        text: "Now playing: " + songName;
-                        font-size: 24px;
-                    }
-
-                    Button {
-                        height: parent.height / 2;
-                        icon: @image-url(".././assets/l.png");
-                    }
-
-                    Button {
-                        height: parent.height / 2;
-                        icon: paused ? @image-url(".././assets/play.png") : @image-url(".././assets/pause.png");
-                        clicked() => {
-                            paused = !paused;
-                            timer.running = !paused;
+            Interface {
+                GridLayout {
+                    padding-left: 150px;
+                    padding-bottom: 80px;
+                    Rectangle {
+                        GridBox {
+                            Row {
+                                Text {
+                                    text: "HOME";
+                                    font-size: 24px;
+                                }
+                            }
                         }
-                    }
 
-                    Button {
-                        height: parent.height / 2;
-                        icon: @image-url(".././assets/r.png");
+                        border-width: 10px;
+                        border-color: Colors.red;
                     }
                 }
-
-                VerticalBox {
-                    alignment: start;
-                    padding-bottom: 100px;
-                    ProgressIndicator {
-                        padding-top: 100px;
-                        height: 10px;
-                        progress: count / 10;
-                    }
-                }
-
-                background: #b5832e;
-                height: 80px;
-                colspan: 2;
-                row: 1;
             }
         }
     }

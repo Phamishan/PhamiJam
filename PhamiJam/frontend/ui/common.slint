@@ -1,6 +1,9 @@
-import { Button } from "std-widgets.slint";
-export global Page {
+import { Button, VerticalBox, HorizontalBox, ProgressIndicator, GridBox } from "std-widgets.slint";
+export global globalVariables {
     in-out property <int> activePage: 0;
+    in-out property <float> count: 0;
+    in-out property <bool> paused: true;
+    in-out property <string> songName: "SANG";
 }
 
 export component Divider {
@@ -15,7 +18,7 @@ export component HomeBtn {
         icon: @image-url(".././assets/home.png");
         text: "Home";
         clicked() => {
-            Page.activePage = 2;
+            globalVariables.activePage = 2;
         }
     }
 }
@@ -25,7 +28,7 @@ export component ProfileBtn {
         icon: @image-url(".././assets/profile.png");
         text: "Profile";
         clicked() => {
-            Page.activePage = 3;
+            globalVariables.activePage = 3;
         }
     }
 }
@@ -39,5 +42,89 @@ export component LibraryBtn {
 export component RecentPlaylistBtn {
     Button {
         text: "%{recent playlist}%";
+    }
+}
+
+export component Interface {
+    @children
+    timer := Timer {
+        interval: 1ms;
+        running: false;
+        triggered() => {
+            if globalVariables.count >= 10 {
+                self.running = false;
+            }
+            globalVariables.count = globalVariables.count + 0.01;
+            debug(globalVariables.count);
+        }
+    }
+
+    GridLayout {
+        Rectangle {
+            background: #121212;
+            width: 150px;
+            VerticalBox {
+                padding: 25px;
+                alignment: space-around;
+                HomeBtn { }
+
+                Divider { }
+
+                ProfileBtn { }
+
+                Divider { }
+
+                LibraryBtn { }
+
+                Divider { }
+
+                RecentPlaylistBtn { }
+            }
+        }
+
+        Rectangle {
+            HorizontalBox {
+                padding-top: 30px;
+                alignment: center;
+                Text {
+                    text: "Now playing: " + globalVariables.songName;
+                    font-size: 24px;
+                }
+
+                Button {
+                    height: parent.height / 2;
+                    icon: @image-url(".././assets/l.png");
+                }
+
+                Button {
+                    height: parent.height / 2;
+                    icon: globalVariables.paused ? @image-url(".././assets/play.png") : @image-url(".././assets/pause.png");
+                    clicked() => {
+                        globalVariables.paused = !globalVariables.paused;
+                        timer.running = !globalVariables.paused;
+                    }
+                }
+
+                Button {
+                    height: parent.height / 2;
+                    icon: @image-url(".././assets/r.png");
+                }
+            }
+
+            VerticalBox {
+                alignment: start;
+                padding-bottom: 100px;
+                ProgressIndicator {
+                    padding-top: 100px;
+                    height: 10px;
+                    progress: globalVariables.count / 10;
+                }
+            }
+
+            background: #b5832e;
+            height: 80px;
+            colspan: 2;
+            row: 1;
+        }
     }
 }
