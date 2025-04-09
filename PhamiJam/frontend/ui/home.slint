@@ -1,4 +1,4 @@
-import { Button, VerticalBox, HorizontalBox, ProgressIndicator, GridBox } from "std-widgets.slint";
+import { Button, VerticalBox, HorizontalBox, ProgressIndicator, GridBox, LineEdit } from "std-widgets.slint";
 import { globalVariables, Divider, HomeBtn, ProfileBtn, LibraryBtn, RecentPlaylistBtn, Interface } from "common.slint";
 
 export component Home inherits Window {
@@ -10,16 +10,65 @@ export component Home inherits Window {
                     padding-bottom: 80px;
                     Rectangle {
                         GridBox {
-                            Row {
-                                Text {
-                                    text: "HOME";
-                                    font-size: 24px;
+                            Rectangle {
+                                HorizontalBox {
+
+                                    Image {
+                                        width: 25px;
+                                        source: @image-url(".././assets/search.png");
+                                    }
+
+                                    LineEdit {
+                                        placeholder-text: "Search...";
+                                    }
                                 }
                             }
-                        }
 
-                        border-width: 10px;
-                        border-color: Colors.red;
+                            Rectangle {
+                                GridBox {
+                                    Rectangle {
+                                        //background: green;
+                                        row: 0;
+                                        col: 0;
+                                    }
+
+                                    Rectangle {
+                                        //background: pink;
+                                        row: 0;
+                                        col: 1;
+                                    }
+
+                                    Rectangle {
+                                        //background: red;
+                                        row: 0;
+                                        col: 2;
+                                    }
+
+                                    Rectangle {
+                                        //background: blue;
+                                        row: 1;
+                                        col: 0;
+                                    }
+
+                                    Rectangle {
+                                        //background: black;
+                                        row: 1;
+                                        col: 1;
+                                    }
+
+                                    Rectangle {
+                                        //background: purple;
+                                        row: 1;
+                                        col: 2;
+                                    }
+                                }
+
+                                background: Colors.rgba(255, 255, 255, 0.2);
+                                border-radius: 10px;
+                                row: 1;
+                                col: 0;
+                            }
+                        }
                     }
                 }
             }
