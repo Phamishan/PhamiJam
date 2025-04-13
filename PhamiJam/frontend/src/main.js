@@ -11,6 +11,7 @@ const main = async () => {
             password: password,
             email: email,
         };
+
         try {
             const response = await fetch("http://localhost:3333/register", {
                 method: "POST",
@@ -20,17 +21,22 @@ const main = async () => {
                 body: JSON.stringify(payload),
             });
 
+            const data = await response.json();
+
             if (!response.ok) {
-                throw new Error(`HTTP ${response.status}`);
+                console.error(`❌ Registration failed: ${data}`);
+                mainWindow.status = data; //needfix
             }
 
-            const data = await response.json();
             console.log(data);
-            mainWindow.status = `✅ Registered as ${data.name || ui.name}`;
-        } catch (err) {
-            mainWindow.status = `❌ Error: ${err.message}`;
+            console.log(`✅ Registered as ${data.username || mainWindow.username}`);
+
+            mainWindow.errorMessage = "";
+
+            console.log("Payload:", payload);
+        } catch (error) {
+            console.error(`❌ Connection error: ${error.message}`);
         }
-        console.log("Payload:", payload);
     };
 
     await mainWindow.run();

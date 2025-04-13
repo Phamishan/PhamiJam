@@ -6,6 +6,7 @@ export component Register inherits Window {
     property <string> email;
     property <string> password;
     in-out property <string> status;
+    callback popup();
     background: #dba43a;
     VerticalBox {
         alignment: center;
@@ -68,9 +69,27 @@ export component Register inherits Window {
                     }
                 }
 
+                popup := PopupWindow {
+                    Rectangle {
+                        height: 100%;
+                        width: 100%;
+                        background: yellow;
+                    }
+
+                    x: 20px;
+                    y: 20px;
+                    height: 50px;
+                    width: 50px;
+                }
+
                 Text {
-                    text: root.status;
+                    text: status;
                     color: red;
+                    x: 25px;
+                    y: 300px;
+                    font-size: 14px;
+                    horizontal-alignment: left;
+                    width: 200px;
                 }
             }
         }
