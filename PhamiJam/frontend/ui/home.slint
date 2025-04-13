@@ -1,5 +1,5 @@
-import { Button, VerticalBox, HorizontalBox, ProgressIndicator, GridBox, LineEdit } from "std-widgets.slint";
-import { globalVariables, Divider, HomeBtn, ProfileBtn, LibraryBtn, RecentPlaylistBtn, Interface } from "common.slint";
+import { Button, VerticalBox, HorizontalBox, ProgressIndicator, GridBox, LineEdit, TextEdit } from "std-widgets.slint";
+import { globalVariables, Divider, HomeBtn, ProfileBtn, LibraryBtn, RecentPlaylistBtn, Interface, PlaylistBtn } from "common.slint";
 
 export component Home inherits Window {
     GridLayout {
@@ -8,65 +8,86 @@ export component Home inherits Window {
                 GridLayout {
                     padding-left: 150px;
                     padding-bottom: 80px;
-                    Rectangle {
+                    HorizontalBox {
                         GridBox {
                             Rectangle {
                                 HorizontalBox {
-
+                                    alignment: start;
                                     Image {
                                         width: 25px;
                                         source: @image-url(".././assets/search.png");
                                     }
-
-                                    LineEdit {
-                                        placeholder-text: "Search...";
-                                    }
                                 }
+
+                                LineEdit {
+                                    placeholder-text: "Search...";
+                                    width: parent.width - 75px;
+                                }
+
+                                height: 50px;
                             }
 
                             Rectangle {
                                 GridBox {
-                                    Rectangle {
-                                        //background: green;
-                                        row: 0;
-                                        col: 0;
+                                    PlaylistBtn {
+                                        Text {
+                                            text: "playlist1";
+                                            font-size: 20px;
+                                            color: white;
+                                        }
+
+                                        clicked() => {
+                                            globalVariables.activePage = 4;
+                                        }
                                     }
 
-                                    Rectangle {
-                                        //background: pink;
-                                        row: 0;
-                                        col: 1;
+                                    PlaylistBtn {
+                                        Text {
+                                            text: "playlist2";
+                                            font-size: 20px;
+                                            color: white;
+                                        }
                                     }
 
-                                    Rectangle {
-                                        //background: red;
-                                        row: 0;
-                                        col: 2;
+                                    PlaylistBtn {
+                                        Text {
+                                            text: "playlist3";
+                                            font-size: 20px;
+                                            color: white;
+                                        }
                                     }
 
-                                    Rectangle {
-                                        //background: blue;
+                                    PlaylistBtn {
+                                        Text {
+                                            text: "DAILY MIX #1";
+                                            font-size: 20px;
+                                            color: white;
+                                        }
+
                                         row: 1;
-                                        col: 0;
                                     }
 
-                                    Rectangle {
-                                        //background: black;
-                                        row: 1;
-                                        col: 1;
+                                    PlaylistBtn {
+                                        Text {
+                                            text: "DAILY MIX #2";
+                                            font-size: 20px;
+                                            color: white;
+                                        }
                                     }
 
-                                    Rectangle {
-                                        //background: purple;
-                                        row: 1;
-                                        col: 2;
+                                    PlaylistBtn {
+                                        Text {
+                                            text: "DAILY MIX #3";
+                                            font-size: 20px;
+                                            color: white;
+                                        }
                                     }
                                 }
 
-                                background: Colors.rgba(255, 255, 255, 0.2);
-                                border-radius: 10px;
                                 row: 1;
                                 col: 0;
+                                background: Colors.rgba(255, 255, 255, 0.2);
+                                border-radius: 10px;
                             }
                         }
                     }

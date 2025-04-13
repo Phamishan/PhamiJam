@@ -1,0 +1,185 @@
+import { Interface } from "common.slint";
+import { GridBox, VerticalBox, HorizontalBox, Button, TextEdit, ScrollView, StandardTableView } from "std-widgets.slint";
+export component Playlist inherits Window {
+    in-out property <string> playlistName: "My Cool Playlist";
+    in-out property <string> playlistDescription: "Description of the playlist goes here. It can be a long description that explains the content of the playlist.";
+    in-out property <int> songCount: 0;
+    in-out property <int> totalDuration: 0;
+    popup := PopupWindow {
+        width: parent.width / 4;
+        height: parent.height - 200px;
+        x: parent.width / 2 - self.width / 2;
+        y: parent.height / 2 - self.height / 2;
+        close-policy: no-auto-close;
+        Rectangle {
+            VerticalBox {
+                alignment: start;
+                Text {
+                    text: "Cover art:";
+                    font-size: 14px;
+                    color: white;
+                }
+
+                Button {
+                    text: "Upload Image";
+                    clicked() => {
+                        // Upload image logic here
+                    }
+                }
+
+                Text {
+                    text: "Titel:";
+                    font-size: 14px;
+                    color: white;
+                }
+
+                TextEdit {
+                    width: parent.width - 20px;
+                    height: parent.height / 10;
+                    text: playlistName;
+                    font-size: 12px;
+                }
+
+                Text {
+                    text: "Description:";
+                    font-size: 14px;
+                    color: white;
+                }
+
+                TextEdit {
+                    width: parent.width - 20px;
+                    height: parent.height / 4;
+                    text: playlistDescription;
+                    wrap: word-wrap;
+                    font-size: 12px;
+                }
+            }
+
+            padding-bottom: 50px;
+            VerticalBox {
+                alignment: end;
+                Button {
+                    text: "Save Changes";
+                    clicked() => {
+                                // Save changes logic here
+                                popup.close();
+                    }
+                }
+
+                Button {
+                    text: "Close";
+                    clicked() => {
+                        popup.close();
+                    }
+                }
+            }
+
+            border-radius: 10px;
+            background: Colors.rgba(0, 0, 0, 0.8);
+        }
+    }
+
+    GridLayout {
+        Row {
+            Interface {
+                GridLayout {
+                    padding-left: 150px;
+                    padding-bottom: 80px;
+                    GridBox {
+                        Rectangle {
+                            HorizontalBox {
+                                Image {
+                                    width: 200px;
+                                    height: 200px;
+                                    source: @image-url(".././assets/catPHOENIX.jpg");
+                                }
+
+                                VerticalBox {
+                                    Text {
+                                        text: playlistName;
+                                        font-size: 36px;
+                                        color: white;
+                                        vertical-alignment: top;
+                                    }
+
+                                    Text {
+                                        text: playlistDescription;
+                                        font-size: 18px;
+                                        color: white;
+                                        wrap: word-wrap;
+                                        vertical-alignment: top;
+                                    }
+
+                                    Text {
+                                        text: songCount + " songs" + " | " + totalDuration + " minutes";
+                                        font-size: 14px;
+                                        color: white;
+                                        vertical-alignment: bottom;
+                                    }
+                                }
+
+                                HorizontalBox {
+                                    alignment: end;
+                                    Button {
+                                        icon: @image-url(".././assets/edit.png");
+                                        clicked() => {
+                                            popup.show();
+                                        }
+                                        height: 50px;
+                                        width: 50px;
+                                    }
+                                }
+                            }
+
+                            row: 0;
+                            background: Colors.rgba(255, 255, 255, 0.2);
+                            border-radius: 10px;
+                        }
+
+                        Rectangle {
+                            VerticalBox {
+                                StandardTableView {
+                                    columns: [{ title: "Song Name" }, { title: "Duration" }];
+                                    rows: [
+                                        [{ text: "Song 1" }, { text: "3 minutes" }],
+                                        [{ text: "Song 2" }, { text: "4 minutes" }],
+                                        [{ text: "Song 3" }, { text: "5 minutes" }],
+                                        [{ text: "Song 4" }, { text: "6 minutes" }],
+                                        [{ text: "Song 5" }, { text: "7 minutes" }],
+                                        [{ text: "Song 6" }, { text: "8 minutes" }],
+                                        [{ text: "Song 7" }, { text: "9 minutes" }],
+                                        [{ text: "Song 8" }, { text: "10 minutes" }],
+                                        [{ text: "Song 9" }, { text: "11 minutes" }],
+                                        [{ text: "Song 10" }, { text: "12 minutes" }],
+                                        [{ text: "Song 11" }, { text: "13 minutes" }],
+                                        [{ text: "Song 12" }, { text: "14 minutes" }],
+                                        [{ text: "Song 13" }, { text: "15 minutes" }],
+                                        [{ text: "Song 14" }, { text: "16 minutes" }],
+                                        [{ text: "Song 15" }, { text: "17 minutes" }],
+                                        [{ text: "Song 16" }, { text: "18 minutes" }],
+                                        [{ text: "Song 17" }, { text: "19 minutes" }],
+                                        [{ text: "Song 18" }, { text: "20 minutes" }],
+                                        [{ text: "Song 19" }, { text: "21 minutes" }],
+                                        [{ text: "Song 20" }, { text: "22 minutes" }],
+                                        [{ text: "Song 21" }, { text: "23 minutes" }],
+                                        [{ text: "Song 22" }, { text: "24 minutes" }],
+                                        [{ text: "Song 23" }, { text: "25 minutes" }],
+                                        [{ text: "Song 24" }, { text: "26 minutes" }],
+                                        [{ text: "Song 25" }, { text: "27 minutes" }],
+                                    ];
+                                    current-row-changed(index) => {
+                                        debug("Current row: ", index);
+                                    }
+                                }
+                            }
+
+                            row: 1;
+                            background: Colors.rgba(255, 255, 255, 0.2);
+                            border-radius: 10px;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

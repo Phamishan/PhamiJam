@@ -1,4 +1,4 @@
-import { Button, VerticalBox, HorizontalBox, ProgressIndicator, GridBox } from "std-widgets.slint";
+import { Button, VerticalBox, HorizontalBox, ProgressIndicator, GridBox, TextEdit } from "std-widgets.slint";
 export global globalVariables {
     in-out property <int> activePage: 0;
     in-out property <float> count: 0;
@@ -128,4 +128,22 @@ export component Interface {
             row: 1;
         }
     }
+}
+
+export component PlaylistBtn inherits Rectangle {
+    in-out property text <=> txt.text;
+    callback clicked <=> touch.clicked;
+    border-radius: 10px;
+    background: touch.pressed ? #b5832e : touch.has-hover ? #b5842ea2 : #b5832e;
+    txt := Text {
+        x: (parent.width - self.width) / 2 + (touch.pressed ? 2px : 0);
+        y: (parent.height - self.height) / 2 + (touch.pressed ? 1px : 0);
+        color: touch.pressed ? #fff : #eee;
+    }
+
+    touch := TouchArea { }
+}
+
+export global callbacks {
+    callback register(string, string, string);
 }

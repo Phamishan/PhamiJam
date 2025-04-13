@@ -1,10 +1,13 @@
-import { globalVariables } from "common.slint";
+import { globalVariables, callbacks } from "common.slint";
 import { Register } from "register.slint";
 import { Login } from "login.slint";
 import { Home } from "home.slint";
 import { Profile } from "profile.slint";
+import { Playlist } from "playlist.slint";
+import { VerticalBox, Button } from "std-widgets.slint";
 
 export component MainWindow inherits Window {
+    callback register <=> callbacks.register;
     title: "PhamiJam";
     min-width: 1024px;
     min-height: 576px;
@@ -22,6 +25,9 @@ export component MainWindow inherits Window {
             visible: true;
         }
         if globalVariables.activePage == 3:  Profile {
+            visible: true;
+        }
+        if globalVariables.activePage == 4:  Playlist {
             visible: true;
         }
     }
