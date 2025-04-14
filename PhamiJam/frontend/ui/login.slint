@@ -1,7 +1,9 @@
 import { Button, VerticalBox, HorizontalBox, LineEdit } from "std-widgets.slint";
-import { globalVariables } from "common.slint";
+import { globalVariables, callbacks } from "common.slint";
 
 export component Login inherits Window {
+    property <string> email;
+    property <string> password;
     VerticalBox {
         alignment: center;
         HorizontalBox {
@@ -11,16 +13,18 @@ export component Login inherits Window {
                 width: 250px;
                 height: 400px;
                 border-radius: 25px;
-                LineEdit {
-                    placeholder-text: "Username";
+                emailInput := LineEdit {
+                    placeholder-text: "Email";
+                    text: root.email;
                     width: 200px;
                     x: 25px;
                     y: 100px;
                 }
 
-                LineEdit {
+                passwordInput := LineEdit {
                     placeholder-text: "Password";
-                    input-type: password;
+                    text: root.password;
+                    input-type: InputType.password;
                     width: 200px;
                     x: 25px;
                     y: 150px;
@@ -48,7 +52,7 @@ export component Login inherits Window {
                     x: 97px;
                     y: 350px;
                     clicked => {
-                        globalVariables.activePage = 2;
+                        callbacks.login(emailInput.text, passwordInput.text);
                     }
                 }
             }

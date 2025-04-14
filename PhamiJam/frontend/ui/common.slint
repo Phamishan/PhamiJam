@@ -4,6 +4,7 @@ export global globalVariables {
     in-out property <float> count: 0;
     in-out property <bool> paused: true;
     in-out property <string> songName: "SANG";
+    in-out property <string> username;
 }
 
 export component Divider {
@@ -146,4 +147,7 @@ export component PlaylistBtn inherits Rectangle {
 
 export global callbacks {
     callback register(string, string, string);
+    callback login(string, string);
+    callback logout();
+    callback getUserInfo();
 }

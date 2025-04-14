@@ -7,7 +7,15 @@ import { Playlist } from "playlist.slint";
 import { VerticalBox, Button } from "std-widgets.slint";
 
 export component MainWindow inherits Window {
+    in-out property <int> globalActivePage <=> globalVariables.activePage;
+    in-out property <bool> showToast;
+    in-out property <string> toastMessage;
+    in-out property <color> toastColor;
+    in-out property <string> globalUsername <=> globalVariables.username;
     callback register <=> callbacks.register;
+    callback login <=> callbacks.login;
+    callback logout <=> callbacks.logout;
+    callback getUserInfo <=> callbacks.getUserInfo;
     title: "PhamiJam";
     min-width: 1024px;
     min-height: 576px;
@@ -21,7 +29,7 @@ export component MainWindow inherits Window {
         if globalVariables.activePage == 1: Login {
             visible: true;
         }
-        if globalVariables.activePage == 2:  Home {
+        if globalVariables.activePage == 2: Home {
             visible: true;
         }
         if globalVariables.activePage == 3:  Profile {
@@ -29,6 +37,24 @@ export component MainWindow inherits Window {
         }
         if globalVariables.activePage == 4:  Playlist {
             visible: true;
+        }
+    }
+
+    Rectangle {
+        opacity: root.showToast ? 1.0 : 0.0;
+        animate opacity { duration: 250ms; }
+        background: root.toastColor;
+        border-radius: 8px;
+        padding: 8px;
+        y: parent.height - 60px;
+        x: (parent.width - self.width) / 2;
+        width: 300px;
+        height: 40px;
+        Text {
+            text: root.toastMessage;
+            color: white;
+            horizontal-alignment: center;
+            vertical-alignment: center;
         }
     }
 }

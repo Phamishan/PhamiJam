@@ -1,7 +1,11 @@
 import { Button, VerticalBox, HorizontalBox, ProgressIndicator, GridBox } from "std-widgets.slint";
-import { globalVariables, Divider, HomeBtn, ProfileBtn, LibraryBtn, RecentPlaylistBtn, Interface } from "common.slint";
+import { globalVariables, Divider, HomeBtn, ProfileBtn, LibraryBtn, RecentPlaylistBtn, Interface, callbacks } from "common.slint";
 
 export component Profile inherits Window {
+    property <string> username: globalVariables.username;
+    init => {
+        callbacks.getUserInfo();
+    }
     GridLayout {
         Row {
             Interface {
@@ -23,8 +27,15 @@ export component Profile inherits Window {
 
                                 Rectangle {
                                     Text {
-                                        text: "Phamishan";
+                                        text: username;
                                         font-size: 24px;
+                                    }
+                                }
+
+                                Button {
+                                    text: "Logout";
+                                    clicked => {
+                                        callbacks.logout();
                                     }
                                 }
                             }

@@ -1,7 +1,8 @@
 const { PrismaClient } = require("@prisma/client");
+const jwt = require("jsonwebtoken");
 const express = require("express");
 const dotenv = require("dotenv");
-dotenv.config();
+dotenv.config({ path: "../.env" });
 
 const prisma = new PrismaClient();
 const app = express();
@@ -33,20 +34,45 @@ app.post("/register", async (req, res) => {
 });
 
 app.post("/login", async (req, res) => {
-    const { username, password } = req.body;
+    const { email, password } = req.body;
 
-    if (!username || !password) {
+    if (!email || !password) {
         return res.status(400).json("Please fill out all required fields.");
     }
 
-    const checkUsername = await prisma.user.findFirst({ where: { username: username } });
-    const checkPassword = await prisma.user.findFirst({ where: { password: password } });
+    const checkUser = await prisma.user.findFirst({
+        where: {
+            AND: [{ email: email }, { password: password }],
+        },
+    });
 
-    if (checkUsername && checkPassword) {
-        return res.status(200).json("Logged in.");
-    } else {
+    if (!checkUser) {
         return res.status(400).json("Invalid credentials.");
     }
+
+    const getUsername = await prisma.user.findFirst({
+        where: { email: email },
+    });
+
+    const token = jwt.sign({ id: checkUser.id, username: getUsername.username }, process.env.JWT_SECRET, {
+        expiresIn: "1h",
+    });
+
+    return res.status(200).json(token);
 });
+
+/*
+app.post("/getUserInfo", async (req, res) => {
+    const { id } = req.body;
+
+    const userInDb = await prisma.user.findFirst({ where: { id: id } });
+
+    if (!userInDb) {
+        return res.status(400).json("User not found.");
+    }
+
+    return res.status(200).json(userInDb);
+});
+*/
 
 app.listen(port, () => console.log(`Server ready @ http://localhost:${port}`));
