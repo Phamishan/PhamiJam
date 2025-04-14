@@ -38,6 +38,9 @@ export component LibraryBtn {
     Button {
         icon: @image-url(".././assets/library.png");
         text: "Library";
+        clicked() => {
+            globalVariables.activePage = 5;
+        }
     }
 }
 

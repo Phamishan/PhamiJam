@@ -4,6 +4,7 @@ import { Login } from "login.slint";
 import { Home } from "home.slint";
 import { Profile } from "profile.slint";
 import { Playlist } from "playlist.slint";
+import { Library } from "library.slint";
 import { VerticalBox, Button } from "std-widgets.slint";
 
 export component MainWindow inherits Window {
@@ -36,6 +37,9 @@ export component MainWindow inherits Window {
             visible: true;
         }
         if globalVariables.activePage == 4:  Playlist {
+            visible: true;
+        }
+        if globalVariables.activePage == 5:  Library {
             visible: true;
         }
     }

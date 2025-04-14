@@ -1,4 +1,4 @@
-import { Button, VerticalBox, HorizontalBox, ProgressIndicator, GridBox } from "std-widgets.slint";
+import { Button, VerticalBox, HorizontalBox, ProgressIndicator, GridBox, TextEdit } from "std-widgets.slint";
 import { globalVariables, Divider, HomeBtn, ProfileBtn, LibraryBtn, RecentPlaylistBtn, Interface, callbacks } from "common.slint";
 
 export component Profile inherits Window {
@@ -6,43 +6,127 @@ export component Profile inherits Window {
     init => {
         callbacks.getUserInfo();
     }
+    popup := PopupWindow {
+        width: parent.width / 4;
+        height: parent.height - 200px;
+        x: parent.width / 2 - self.width / 2;
+        y: parent.height / 2 - self.height / 2;
+        close-policy: no-auto-close;
+        Rectangle {
+            VerticalBox {
+                alignment: start;
+                Text {
+                    text: "Profile picture:";
+                    font-size: 14px;
+                    color: white;
+                }
+
+                Button {
+                    text: "Upload Image";
+                    clicked() => {
+                        // Upload image logic here
+                    }
+                }
+
+                Text {
+                    text: "Username:";
+                    font-size: 14px;
+                    color: white;
+                }
+
+                TextEdit {
+                    width: parent.width - 20px;
+                    height: parent.height / 10;
+                    text: username;
+                    font-size: 12px;
+                }
+            }
+
+            padding-bottom: 50px;
+            VerticalBox {
+                alignment: end;
+                Button {
+                    text: "Save Changes";
+                    clicked() => {
+                                // Save changes logic here
+                                popup.close();
+                    }
+                }
+
+                Button {
+                    text: "Close";
+                    clicked() => {
+                        popup.close();
+                    }
+                }
+            }
+
+            border-radius: 10px;
+            background: Colors.rgba(0, 0, 0, 0.8);
+        }
+    }
+
     GridLayout {
         Row {
             Interface {
                 GridLayout {
                     padding-left: 150px;
                     padding-bottom: 80px;
-                    Rectangle {
-                        GridBox {
-                            GridLayout {
-                                Rectangle {
-                                    Image {
-                                        width: 250px;
-                                        height: 250px;
-                                        source: @image-url(".././assets/catPHOENIX.jpg");
-                                    }
-
-                                    background: yellow;
+                    GridBox {
+                        Rectangle {
+                            HorizontalBox {
+                                Image {
+                                    width: 200px;
+                                    height: 200px;
+                                    source: @image-url(".././assets/catPHOENIX.jpg");
                                 }
 
-                                Rectangle {
+                                VerticalBox {
                                     Text {
-                                        text: username;
+                                        text: username + "'s profile";
                                         font-size: 24px;
                                     }
                                 }
 
-                                Button {
-                                    text: "Logout";
-                                    clicked => {
-                                        callbacks.logout();
+                                HorizontalBox {
+                                    alignment: end;
+                                    Button {
+                                        icon: @image-url(".././assets/edit.png");
+                                        clicked() => {
+                                            popup.show();
+                                        }
+                                        height: 50px;
+                                        width: 50px;
+                                    }
+
+                                    Button {
+                                        icon: @image-url(".././assets/logout.png");
+                                        clicked => {
+                                            callbacks.logout();
+                                        }
+                                        height: 50px;
+                                        width: 50px;
                                     }
                                 }
                             }
+
+                            row: 0;
+                            background: Colors.rgba(255, 255, 255, 0.2);
+                            border-radius: 10px;
                         }
 
-                        border-width: 10px;
-                        border-color: Colors.red;
+                        Rectangle {
+                            VerticalBox {
+                                Text {
+                                    text: "Profile info?";
+                                    font-size: 24px;
+                                }
+                            }
+
+                            row: 1;
+                            background: Colors.rgba(255, 255, 255, 0.2);
+                            border-radius: 10px;
+                        }
                     }
                 }
             }
