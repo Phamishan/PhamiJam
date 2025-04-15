@@ -1,10 +1,13 @@
-import { Button, VerticalBox, HorizontalBox, ProgressIndicator, GridBox, TextEdit } from "std-widgets.slint";
+import { Button, VerticalBox, HorizontalBox, ProgressIndicator } from "std-widgets.slint";
 export global globalVariables {
     in-out property <int> activePage: 0;
     in-out property <float> count: 0;
     in-out property <bool> paused: true;
     in-out property <string> songName: "SANG";
     in-out property <string> username;
+    in-out property <[string]> mp3_list;
+    in-out property <string> songPath;
+    in-out property <[[StandardListViewItem]]> rows;
 }
 
 export component Divider {
@@ -44,9 +47,13 @@ export component LibraryBtn {
     }
 }
 
-export component RecentPlaylistBtn {
+export component CreatePlaylist {
     Button {
-        text: "%{recent playlist}%";
+        icon: @image-url(".././assets/createPlaylist.png");
+        text: "Create Playlist";
+        clicked() => {
+            globalVariables.activePage = 6;
+        }
     }
 }
 
@@ -60,7 +67,7 @@ export component Interface {
                 self.running = false;
             }
             globalVariables.count = globalVariables.count + 0.01;
-            debug(globalVariables.count);
+            //debug(globalVariables.count);
         }
     }
 
@@ -83,7 +90,7 @@ export component Interface {
 
                 Divider { }
 
-                RecentPlaylistBtn { }
+                CreatePlaylist { }
             }
         }
 
@@ -92,7 +99,7 @@ export component Interface {
                 padding-top: 30px;
                 alignment: center;
                 Text {
-                    text: "Now playing: " + globalVariables.songName;
+                    text: "Now playing: " + globalVariables.songPath;
                     font-size: 24px;
                 }
 
@@ -106,7 +113,13 @@ export component Interface {
                     icon: globalVariables.paused ? @image-url(".././assets/play.png") : @image-url(".././assets/pause.png");
                     clicked() => {
                         globalVariables.paused = !globalVariables.paused;
-                        timer.running = !globalVariables.paused;
+                       // timer.running = !globalVariables.paused;
+                        if (globalVariables.paused) {
+                            callbacks.stop_song();
+                        } else {
+                            callbacks.play_song(globalVariables.songPath);
+                            //timer.running = true;
+                        }
                     }
                 }
 
@@ -153,4 +166,8 @@ export global callbacks {
     callback login(string, string);
     callback logout();
     callback getUserInfo();
+    callback createPlaylist(string, string);
+    callback scan_files();
+    callback play_song(string);
+    callback stop_song();
 }

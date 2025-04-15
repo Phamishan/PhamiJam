@@ -8,7 +8,11 @@
     "dependencies": {
         "dotenv": "^16.5.0",
         "jsonwebtoken": "^9.0.2",
-        "slint-ui": "^1.9.0"
+        "music-metadata": "^11.2.0",
+        "musicmetadata": "^2.0.5",
+        "play-sound": "^1.1.6",
+        "slint-ui": "^1.9.0",
+        "sound-play": "^1.1.0"
     },
     "scripts": {
         "start": "node ."

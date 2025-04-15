@@ -1,8 +1,11 @@
-import { Button, VerticalBox, HorizontalBox, ProgressIndicator, GridBox, TextEdit } from "std-widgets.slint";
-import { globalVariables, Divider, HomeBtn, ProfileBtn, LibraryBtn, RecentPlaylistBtn, Interface, callbacks } from "common.slint";
+import { Button, VerticalBox, HorizontalBox, ProgressIndicator, GridBox, TextEdit, StandardTableView } from "std-widgets.slint";
+import { globalVariables, Divider, HomeBtn, ProfileBtn, LibraryBtn, Interface, callbacks } from "common.slint";
 
 export component Profile inherits Window {
     property <string> username: globalVariables.username;
+    property <[string]> mp3_list: globalVariables.mp3_list;
+    property <string> songPath: globalVariables.songPath;
+    callback play_song(string);
     init => {
         callbacks.getUserInfo();
     }
@@ -75,11 +78,13 @@ export component Profile inherits Window {
                     GridBox {
                         Rectangle {
                             HorizontalBox {
+                                /*
                                 Image {
                                     width: 200px;
                                     height: 200px;
                                     source: @image-url(".././assets/catPHOENIX.jpg");
                                 }
+                                */
 
                                 VerticalBox {
                                     Text {
@@ -94,6 +99,15 @@ export component Profile inherits Window {
                                         icon: @image-url(".././assets/edit.png");
                                         clicked() => {
                                             popup.show();
+                                        }
+                                        height: 50px;
+                                        width: 50px;
+                                    }
+
+                                    Button {
+                                        icon: @image-url(".././assets/scanFiles.png");
+                                        clicked() => {
+                                            callbacks.scan_files();
                                         }
                                         height: 50px;
                                         width: 50px;
@@ -118,11 +132,24 @@ export component Profile inherits Window {
                         Rectangle {
                             VerticalBox {
                                 Text {
-                                    text: "Profile info?";
+                                    text: "Loaded songs:";
                                     font-size: 24px;
                                 }
-                            }
 
+                                Rectangle {
+                                    VerticalBox {
+                                        StandardTableView {
+                                            columns: [{ title: "Title" }, { title: "Artist" }];
+                                            rows: globalVariables.rows;
+                                            current-row-changed(index) => {
+                                                globalVariables.songPath = mp3_list[index];
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            
+                            //globalVariables.songPath = song;
                             row: 1;
                             background: Colors.rgba(255, 255, 255, 0.2);
                             border-radius: 10px;

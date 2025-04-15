@@ -1,0 +1,85 @@
+import { Button, VerticalBox, HorizontalBox, LineEdit, GridBox, TextEdit } from "std-widgets.slint";
+import {globalVariables, callbacks, Interface} from "common.slint";
+
+export component CreatePlaylist inherits Window {
+    GridLayout {
+        Row {
+            Interface {
+                GridLayout {
+                    padding-left: 150px;
+                    padding-bottom: 80px;
+                    HorizontalBox {
+                        GridBox {
+                            VerticalBox {
+                                alignment: center;
+                                HorizontalBox {
+                                    alignment: center;
+                                    Rectangle {
+                                        width: 250px;
+                                        height: 400px;
+                                        VerticalBox {
+                                            alignment: start;
+                                            Text {
+                                                text: "Cover art:";
+                                                font-size: 14px;
+                                                color: white;
+                                            }
+
+                                            Button {
+                                                text: "Upload Image";
+                                                clicked() => {
+                                                // Upload image logic here
+                                            }
+                                            }
+
+                                            Text {
+                                                text: "Title:";
+                                                font-size: 14px;
+                                                color: white;
+                                            }
+
+                                            titleInput := TextEdit {
+                                                width: parent.width - 20px;
+                                                height: parent.height / 10;
+                                                placeholder-text: "Title";
+                                                font-size: 12px;
+                                            }
+
+                                            Text {
+                                                text: "Description:";
+                                                font-size: 14px;
+                                                color: white;
+                                            }
+
+                                            descInput := TextEdit {
+                                                width: parent.width - 20px;
+                                                height: parent.height / 4;
+                                                placeholder-text: "Description";
+                                                wrap: word-wrap;
+                                                font-size: 12px;
+                                            }
+                                        }
+
+                                        padding-bottom: 50px;
+                                        VerticalBox {
+                                            alignment: end;
+                                            Button {
+                                                text: "Create";
+                                                clicked => {
+                                                    callbacks.createPlaylist(titleInput.text, descInput.text);
+                                                }
+                                            }
+                                        }
+
+                                        border-radius: 10px;
+                                        background: Colors.rgba(0, 0, 0, 0.8);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

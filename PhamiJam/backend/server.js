@@ -28,6 +28,7 @@ app.post("/register", async (req, res) => {
             username: username,
             password: password,
             email: email,
+            avatar: "string",
         },
     });
     return res.status(200).json(user);
@@ -74,5 +75,23 @@ app.post("/getUserInfo", async (req, res) => {
     return res.status(200).json(userInDb);
 });
 */
+
+app.post("/createPlaylist", async (req, res) => {
+    const { title, userId, coverArt, description } = req.body;
+
+    if (!title || !coverArt || !description) {
+        return res.status(400).json("Please fill out all required fields.");
+    }
+
+    const playlist = await prisma.playlist.create({
+        data: {
+            title: title,
+            userId: userId,
+            coverArt: coverArt,
+            description: description,
+        },
+    });
+    return res.status(200).json(playlist);
+});
 
 app.listen(port, () => console.log(`Server ready @ http://localhost:${port}`));
