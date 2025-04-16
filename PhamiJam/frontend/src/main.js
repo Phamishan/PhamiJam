@@ -208,19 +208,28 @@ const main = async () => {
 
         walk(musicDir);
         const rows = [];
+        const songName = [];
+        const artistName = [];
         for (let i = 0; i < mp3Files.length; i++) {
             try {
                 const metadata = await parseFile(mp3Files[i]);
                 rows.push([{ text: metadata.common.title || "Unknown Title" }, { text: metadata.common.artist || "Unknown Artist" }]);
+                songName.push(metadata.common.title || "Unknown Title");
+                artistName.push(metadata.common.artist || "Unknown Artist");
             } catch (err) {
                 console.error("Error reading metadata:", err);
                 rows.push([{ text: "Unknown Artist" }, { text: "Unknown Title" }]);
+                songName.push("Unknown Title");
+                artistName.push("Unknown Artist");
             }
         }
         showToast(`Found ${mp3Files.length} songs`, "green");
 
+        console.log("Found songs:", songName, artistName);
         mainWindow.rows = rows;
 
+        mainWindow.globalSongName = songName;
+        mainWindow.globalArtistName = artistName;
         mainWindow.globalMp3List = mp3Files;
     };
 

@@ -2,6 +2,7 @@ const { PrismaClient } = require("@prisma/client");
 const jwt = require("jsonwebtoken");
 const express = require("express");
 const dotenv = require("dotenv");
+const bcrypt = require("bcrypt");
 dotenv.config({ path: "../.env" });
 
 const prisma = new PrismaClient();
@@ -17,21 +18,31 @@ app.post("/register", async (req, res) => {
         return res.status(400).json("Please fill out all required fields.");
     }
 
+    if (!email.includes("@")) {
+        return res.status(400).json("Invalid email address.");
+    }
+
     const userInDb = await prisma.user.findFirst({ where: { email: email } });
 
     if (userInDb) {
         return res.status(400).json("User already exists.");
     }
 
-    const user = await prisma.user.create({
-        data: {
-            username: username,
-            password: password,
-            email: email,
-            avatar: "string",
-        },
+    bcrypt.hash(password, 10, async (err, hash) => {
+        if (err) {
+            return res.status(500).json("Error hashing password.");
+        }
+
+        const user = await prisma.user.create({
+            data: {
+                username: username,
+                password: hash,
+                email: email,
+                avatar: "string",
+            },
+        });
+        return res.status(200).json(user);
     });
-    return res.status(200).json(user);
 });
 
 app.post("/login", async (req, res) => {
@@ -41,25 +52,30 @@ app.post("/login", async (req, res) => {
         return res.status(400).json("Please fill out all required fields.");
     }
 
-    const checkUser = await prisma.user.findFirst({
+    const existingUser = await prisma.user.findFirst({
         where: {
-            AND: [{ email: email }, { password: password }],
+            email: email,
         },
     });
 
-    if (!checkUser) {
-        return res.status(400).json("Invalid credentials.");
+    if (!existingUser) {
+        return res.status(400).json("User not found.");
     }
 
-    const getUsername = await prisma.user.findFirst({
-        where: { email: email },
-    });
+    bcrypt.compare(password, existingUser.password, function (err, result) {
+        if (err) {
+            return res.status(500).json("Error comparing password.");
+        }
+        if (!result) {
+            return res.status(400).json("Invalid credentials.");
+        }
 
-    const token = jwt.sign({ id: checkUser.id, username: getUsername.username }, process.env.JWT_SECRET, {
-        expiresIn: "1h",
-    });
+        const token = jwt.sign({ id: existingUser.id, username: existingUser.username }, process.env.JWT_SECRET, {
+            expiresIn: "1h",
+        });
 
-    return res.status(200).json(token);
+        return res.status(200).json(token);
+    });
 });
 
 /*

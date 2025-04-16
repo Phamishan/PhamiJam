@@ -15,7 +15,8 @@ export component MainWindow inherits Window {
     in-out property <string> globalUsername <=> globalVariables.username;
     in-out property <[string]> globalMp3List <=> globalVariables.mp3_list;
     in-out property <[[StandardListViewItem]]> rows <=> globalVariables.rows;
-    in-out property <string> globalSongName <=> globalVariables.songName;
+    in-out property <[string]> globalSongName <=> globalVariables.songName;
+    in-out property <[string]> globalArtistName <=> globalVariables.artistName;
     callback register <=> callbacks.register;
     callback login <=> callbacks.login;
     callback logout <=> callbacks.logout;

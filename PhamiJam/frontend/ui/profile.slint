@@ -5,6 +5,10 @@ export component Profile inherits Window {
     property <string> username: globalVariables.username;
     property <[string]> mp3_list: globalVariables.mp3_list;
     property <string> songPath: globalVariables.songPath;
+    property <[string]> songNameArray: globalVariables.artistNameArray;
+    property <string> songName: globalVariables.songName;
+    property <[string]> artistNameArray: globalVariables.artistNameArray;
+    property <string> artistName: globalVariables.artistName;
     callback play_song(string);
     init => {
         callbacks.getUserInfo();
@@ -143,6 +147,7 @@ export component Profile inherits Window {
                                             rows: globalVariables.rows;
                                             current-row-changed(index) => {
                                                 globalVariables.songPath = mp3_list[index];
+                                                globalVariables.artistName = artistNameArray[index];
                                             }
                                         }
                                     }

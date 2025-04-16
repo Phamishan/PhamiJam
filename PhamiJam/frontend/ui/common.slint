@@ -3,11 +3,14 @@ export global globalVariables {
     in-out property <int> activePage: 0;
     in-out property <float> count: 0;
     in-out property <bool> paused: true;
-    in-out property <string> songName: "SANG";
     in-out property <string> username;
     in-out property <[string]> mp3_list;
     in-out property <string> songPath;
     in-out property <[[StandardListViewItem]]> rows;
+    in-out property <[string]> songNameArray;
+    in-out property <string> songName;
+    in-out property <[string]> artistNameArray;
+    in-out property <string> artistName;
 }
 
 export component Divider {
@@ -99,7 +102,7 @@ export component Interface {
                 padding-top: 30px;
                 alignment: center;
                 Text {
-                    text: "Now playing: " + globalVariables.songPath;
+                    text: "Now playing: " + globalVariables.artistName + globalVariables.songPath;
                     font-size: 24px;
                 }
 
