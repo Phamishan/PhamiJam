@@ -3,12 +3,10 @@ import fs from "fs";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import path from "path";
-import sound from "sound-play";
 import { parseFile } from "music-metadata";
-
 dotenv.config({ path: "../.env" });
 
-let currentAudio = null;
+let audio = new Audio();
 
 const saveToken = (token) => {
     fs.writeFileSync("../auth_token.txt", token, "utf-8");
@@ -117,7 +115,7 @@ const main = async () => {
             console.log("Logged out — token removed. 🔓");
         }
         string = "Logged out! 🔓";
-        showToast(string, "green");
+        showToast(string, "red");
         mainWindow.globalActivePage = 1;
     };
 
@@ -198,7 +196,6 @@ const main = async () => {
                         walk(fullPath);
                     } else if (file.toLowerCase().endsWith(".mp3")) {
                         mp3Files.push(fullPath);
-                        //mp3Files.push(path.basename(fullPath));
                     }
                 }
             } catch (e) {
@@ -225,27 +222,23 @@ const main = async () => {
         }
         showToast(`Found ${mp3Files.length} songs`, "green");
 
-        console.log("Found songs:", songName, artistName);
         mainWindow.rows = rows;
 
-        mainWindow.globalSongName = songName;
-        mainWindow.globalArtistName = artistName;
+        mainWindow.globalSongNameArray = songName;
+        mainWindow.globalArtistNameArray = artistName;
         mainWindow.globalMp3List = mp3Files;
     };
 
     mainWindow.play_song = async (songPath) => {
-        console.log("Playing...");
-
-        currentAudio = await sound.play(songPath, 0.1);
+        console.log("Playing..." + songPath);
     };
 
     mainWindow.stop_song = async () => {
-        console.log(await currentAudio);
+        console.log("Stopping...");
 
-        if (currentAudio && currentAudio.kill) {
-            currentAudio.kill();
-            console.log("Stopped");
-        }
+        console.log(await test);
+
+        console.log("Stopped playing");
     };
 
     await mainWindow.run();

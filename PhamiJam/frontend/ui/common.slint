@@ -1,4 +1,4 @@
-import { Button, VerticalBox, HorizontalBox, ProgressIndicator } from "std-widgets.slint";
+import { Button, VerticalBox, HorizontalBox, ProgressIndicator, Slider, GridBox } from "std-widgets.slint";
 export global globalVariables {
     in-out property <int> activePage: 0;
     in-out property <float> count: 0;
@@ -11,6 +11,7 @@ export global globalVariables {
     in-out property <string> songName;
     in-out property <[string]> artistNameArray;
     in-out property <string> artistName;
+    in-out property <int> volume: 20;
 }
 
 export component Divider {
@@ -98,37 +99,93 @@ export component Interface {
         }
 
         Rectangle {
-            HorizontalBox {
+            GridBox {
                 padding-top: 30px;
-                alignment: center;
                 Text {
-                    text: "Now playing: " + globalVariables.artistName + globalVariables.songPath;
-                    font-size: 24px;
+                    row: 0;
+                    col: 0;
+                    colspan: 2;
+                    text: globalVariables.artistName + " - " + globalVariables.songName;
+                    width: 35%;
+                    font-size: 18px;
+                    overflow: elide;
                 }
 
                 Button {
+                    row: 0;
+                    col: 2;
                     height: parent.height / 2;
+                    width: 100px;
                     icon: @image-url(".././assets/l.png");
                 }
 
                 Button {
+                    row: 0;
+                    col: 3;
                     height: parent.height / 2;
+                    width: 100px;
                     icon: globalVariables.paused ? @image-url(".././assets/play.png") : @image-url(".././assets/pause.png");
                     clicked() => {
                         globalVariables.paused = !globalVariables.paused;
-                       // timer.running = !globalVariables.paused;
-                        if (globalVariables.paused) {
+                            // timer.running = !globalVariables.paused;
+                            if (globalVariables.paused) {
                             callbacks.stop_song();
                         } else {
                             callbacks.play_song(globalVariables.songPath);
-                            //timer.running = true;
-                        }
+                                //timer.running = true;
+                            }
                     }
                 }
 
                 Button {
+                    row: 0;
+                    col: 4;
                     height: parent.height / 2;
+                    width: 100px;
                     icon: @image-url(".././assets/r.png");
+                }
+
+                speaker := Button {
+                    row: 0;
+                    col: 6;
+                    height: parent.height / 2;
+                    width: 100px;
+                    icon: @image-url(".././assets/speakerTrans.png");
+                    clicked() => {
+                        globalVariables.volume = globalVariables.volume == 0 ? 20 : 0;
+                        volumeControl.value = volumeControl.value == 0 ? 20 : 0;
+                        speaker.icon = globalVariables.volume == 0 ? @image-url(".././assets/speakerOff.png") : @image-url(".././assets/speakerTrans.png");
+                    }
+                }
+
+                volumeControl := Slider {
+                    row: 0;
+                    col: 7;
+                    minimum: 0;
+                    maximum: 100;
+                    value: 20;
+                    step: 10;
+                    width: 125px;
+                    released(value) => {
+                        debug(value);
+                        globalVariables.volume = value;
+                        if (value == 0) {
+                            speaker.icon = @image-url(".././assets/speakerOff.png");
+                        } else {
+                            speaker.icon = @image-url(".././assets/speakerTrans.png");
+                        }
+                    }
+                }
+
+                Rectangle {
+                    Text {
+                        text: globalVariables.volume;
+                        color: black;
+                    }
+
+                    width: 25px;
+                    row: 0;
+                    col: 8;
                 }
             }
 

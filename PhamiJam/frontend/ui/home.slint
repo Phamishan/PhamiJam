@@ -2,6 +2,9 @@ import { Button, VerticalBox, HorizontalBox, ProgressIndicator, GridBox, LineEdi
 import { globalVariables, Divider, HomeBtn, ProfileBtn, LibraryBtn, CreatePlaylist, Interface, PlaylistBtn, callbacks } from "common.slint";
 
 export component Home inherits Window {
+    init => {
+        callbacks.getUserInfo();
+    }
     GridLayout {
         Row {
             Interface {
