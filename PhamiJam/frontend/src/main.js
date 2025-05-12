@@ -6,8 +6,6 @@ import path from "path";
 import { parseFile } from "music-metadata";
 dotenv.config({ path: "../.env" });
 
-let audio = new Audio();
-
 const saveToken = (token) => {
     fs.writeFileSync("../auth_token.txt", token, "utf-8");
     console.log("Auth token saved. ✅");
