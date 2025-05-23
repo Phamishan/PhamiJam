@@ -3,6 +3,7 @@ import 'package:phamijam/components/interface.dart';
 import 'package:phamijam/components/sidebar.dart';
 import 'package:provider/provider.dart';
 import 'package:phamijam/models/playback_model.dart';
+import 'package:phamijam/components/audio_player_singleton.dart';
 
 class CreatePlaylist extends StatefulWidget {
   const CreatePlaylist({super.key});
@@ -12,10 +13,6 @@ class CreatePlaylist extends StatefulWidget {
 }
 
 class _CreatePlaylistState extends State<CreatePlaylist> {
-  double _currentSliderValue = 20.0;
-  Duration _progress = Duration(seconds: 0);
-  bool _isPlaying = false;
-
   @override
   Widget build(BuildContext context) {
     final playback = Provider.of<PlaybackModel>(context);
@@ -79,36 +76,37 @@ class _CreatePlaylistState extends State<CreatePlaylist> {
           Align(
             alignment: Alignment.bottomCenter,
             child: Interface(
-              artist:
-                  playback.artistName.isNotEmpty
-                      ? playback.artistName
-                      : 'Unknown Artist',
-              songName:
-                  playback.songName.isNotEmpty
-                      ? playback.songName
-                      : 'Unknown Song',
-              progress: _progress,
-              isPlaying: _isPlaying,
-              currentSliderValue: _currentSliderValue,
+              artist: playback.artistName,
+              songName: playback.songName,
+              progress: playback.progress,
+              isPlaying: playback.isPlaying,
+              isMuted: playback.isMuted,
+              currentSliderValue: playback.currentSliderValue,
               onSeek: (duration) {
-                setState(() {
-                  _progress = duration;
-                });
+                playback.setProgress(duration);
+                player.seek(duration);
               },
               onPlayPauseToggle: () {
-                setState(() {
-                  _isPlaying = !_isPlaying;
-                });
+                playback.setIsPlaying(!playback.isPlaying);
+                if (!playback.isPlaying) {
+                  player.pause();
+                } else {
+                  player.play();
+                }
+              },
+              onToggleVolume: () {
+                playback.setIsMuted(!playback.isMuted);
+                player.setVolume(
+                  playback.isMuted ? 0 : playback.currentSliderValue / 100,
+                );
               },
               onPrevious: () => debugPrint("Previous"),
               onForward: () => debugPrint("Forward"),
               onVolumeChange: (value) {
-                setState(() {
-                  _currentSliderValue = value;
-                  debugPrint("Volume: $_currentSliderValue");
-                });
+                playback.setCurrentSliderValue(value);
+                player.setVolume(value / 100);
               },
-              duration: null,
+              duration: playback.duration,
             ),
           ),
         ],

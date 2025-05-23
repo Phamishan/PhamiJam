@@ -6,8 +6,9 @@ import 'dart:async';
 import 'package:path_provider/path_provider.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:audio_metadata_reader/audio_metadata_reader.dart';
-
-final player = AudioPlayer();
+import 'package:phamijam/models/playback_model.dart';
+import 'package:provider/provider.dart';
+import 'package:phamijam/components/audio_player_singleton.dart';
 
 class User extends StatefulWidget {
   const User({super.key});
@@ -17,11 +18,6 @@ class User extends StatefulWidget {
 }
 
 class _UserState extends State<User> {
-  double _currentSliderValue = 20.0;
-  Duration _progress = Duration(seconds: 0);
-  Duration? _duration;
-  bool _isPlaying = false;
-
   List<String> artistName = [];
   List<String> songName = [];
   List<String> songPaths = [];
@@ -33,22 +29,16 @@ class _UserState extends State<User> {
   @override
   void initState() {
     super.initState();
+    final playback = Provider.of<PlaybackModel>(context, listen: false);
+
     _positionSubscription = player.positionStream.listen((position) {
-      setState(() {
-        _progress = position;
-        debugPrint("Progress updated: $_progress");
-      });
+      playback.setProgress(position);
     });
     _playerStateSubscription = player.playerStateStream.listen((state) {
-      setState(() {
-        _isPlaying = state.playing;
-      });
+      playback.setIsPlaying(state.playing);
     });
     player.durationStream.listen((duration) {
-      setState(() {
-        _duration = duration;
-        debugPrint("Duration updated: $_duration");
-      });
+      playback.setDuration(duration);
     });
     _scanFilesPressed();
   }
@@ -121,7 +111,7 @@ class _UserState extends State<User> {
   }
 
   Future<void> _play([int? index]) async {
-    debugPrint("Play button pressed");
+    final playback = Provider.of<PlaybackModel>(context, listen: false);
     int playIndex = index ?? 0;
 
     if (songPaths.isNotEmpty && playIndex < songPaths.length) {
@@ -129,17 +119,23 @@ class _UserState extends State<User> {
       final file = File(songPath);
 
       if (await file.exists()) {
-        setState(() {
-          _duration = Duration.zero;
-        });
+        playback.setDuration(Duration.zero);
         await player.setUrl(file.path);
-        debugPrint("Playing: $songPath");
         player.play();
         player.seek(Duration.zero);
 
         setState(() {
           _currentlyPlayingIndex = playIndex;
         });
+
+        playback.setArtist(
+          artistName.isNotEmpty ? artistName[playIndex] : 'Unknown Artist',
+        );
+        playback.setSongName(
+          songName.isNotEmpty ? songName[playIndex] : 'Unknown Song',
+        );
+        playback.setIsPlaying(true);
+        playback.setIsMuted(false);
       } else {
         debugPrint("File not found: $songPath");
       }
@@ -148,6 +144,8 @@ class _UserState extends State<User> {
 
   @override
   Widget build(BuildContext context) {
+    final playback = Provider.of<PlaybackModel>(context);
+
     return Scaffold(
       backgroundColor: Color(0xFFdba43a),
       body: Stack(
@@ -275,7 +273,10 @@ class _UserState extends State<User> {
                                         ),
                                         child: Container(
                                           decoration: BoxDecoration(
-                                            color: Color(0xFFdba43a),
+                                            color:
+                                                _currentlyPlayingIndex == index
+                                                    ? Color(0xFFb5832e)
+                                                    : Color(0xFFdba43a),
                                             borderRadius: BorderRadius.circular(
                                               8,
                                             ),
@@ -298,12 +299,7 @@ class _UserState extends State<User> {
                                               color: Colors.white,
                                             ),
                                             onTap: () {
-                                              setState(() {
-                                                _isPlaying = true;
-                                              });
                                               _play(index);
-                                              player.play();
-                                              player.setVolume(0.1);
                                             },
                                           ),
                                         ),
@@ -325,44 +321,36 @@ class _UserState extends State<User> {
           Align(
             alignment: Alignment.bottomCenter,
             child: Interface(
-              artist:
-                  artistName.isNotEmpty
-                      ? artistName[_currentlyPlayingIndex ?? 0]
-                      : 'Unknown Artist',
-              songName:
-                  songName.isNotEmpty
-                      ? songName[_currentlyPlayingIndex ?? 0]
-                      : 'Unknown Song',
-              progress: _progress,
-              isPlaying: _isPlaying,
-              currentSliderValue: _currentSliderValue,
+              artist: playback.artistName,
+              songName: playback.songName,
+              progress: playback.progress,
+              isPlaying: playback.isPlaying,
+              isMuted: playback.isMuted,
+              currentSliderValue: playback.currentSliderValue,
               onSeek: (duration) {
-                setState(() {
-                  _progress = duration;
-                  player.seek(duration);
-                  debugPrint("Seek to: $duration");
-                });
+                playback.setProgress(duration);
+                player.seek(duration);
               },
-              duration: _duration,
+              duration: playback.duration,
               onPlayPauseToggle: () {
-                setState(() {
-                  _isPlaying = !_isPlaying;
-
-                  if (!_isPlaying) {
-                    player.pause();
-                  } else {
-                    player.play();
-                  }
-                });
+                playback.setIsPlaying(!playback.isPlaying);
+                if (!playback.isPlaying) {
+                  player.pause();
+                } else {
+                  player.play();
+                }
+              },
+              onToggleVolume: () {
+                playback.setIsMuted(!playback.isMuted);
+                player.setVolume(
+                  playback.isMuted ? 0 : playback.currentSliderValue / 100,
+                );
               },
               onPrevious: () => debugPrint("Previous"),
               onForward: () => debugPrint("Forward"),
               onVolumeChange: (value) {
-                setState(() {
-                  _currentSliderValue = value;
-                  player.setVolume(0.1);
-                  debugPrint("Volume2: ${_currentSliderValue / 100}");
-                });
+                playback.setCurrentSliderValue(value);
+                player.setVolume(value / 100);
               },
             ),
           ),

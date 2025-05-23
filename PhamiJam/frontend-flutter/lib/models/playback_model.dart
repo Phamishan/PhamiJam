@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 
 class PlaybackModel extends ChangeNotifier {
-  String artistName = '';
-  String songName = '';
-  bool isPlaying = false;
+  String artistName = 'Unknown Artist';
+  String songName = 'Unknown Song';
   Duration progress = Duration.zero;
   Duration? duration;
-  double volume = 20.0;
+  bool isPlaying = false;
+  bool isMuted = false;
+  double currentSliderValue = 20.0;
 
-  void setArtistAndSong(String artist, String song) {
+  void setArtist(String artist) {
     artistName = artist;
-    songName = song;
     notifyListeners();
   }
 
-  void setIsPlaying(bool value) {
-    isPlaying = value;
+  void setSongName(String name) {
+    songName = name;
     notifyListeners();
   }
 
@@ -29,8 +29,18 @@ class PlaybackModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setVolume(double value) {
-    volume = value;
+  void setIsPlaying(bool value) {
+    isPlaying = value;
+    notifyListeners();
+  }
+
+  void setIsMuted(bool value) {
+    isMuted = value;
+    notifyListeners();
+  }
+
+  void setCurrentSliderValue(double value) {
+    currentSliderValue = value;
     notifyListeners();
   }
 }
