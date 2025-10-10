@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:phamijam/pages/home.dart';
 import 'package:phamijam/pages/user.dart';
 import 'package:phamijam/pages/library.dart';
-import 'package:phamijam/pages/create_playlist.dart';
 
 class Sidebar extends StatelessWidget {
   const Sidebar({super.key});
@@ -50,30 +49,6 @@ class Sidebar extends StatelessWidget {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => User()),
-              );
-            },
-            style: TextButton.styleFrom(
-              backgroundColor: Color.fromARGB(89, 88, 88, 88),
-              minimumSize: Size(120, 50),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-            ),
-            child: Column(
-              children: [Icon(Icons.person, color: Colors.white, size: 24)],
-            ),
-          ),
-          Divider(
-            color: Colors.white,
-            thickness: 2.0,
-            indent: 15.0,
-            endIndent: 15.0,
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.push(
-                context,
                 MaterialPageRoute(builder: (context) => Library()),
               );
             },
@@ -100,7 +75,7 @@ class Sidebar extends StatelessWidget {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => CreatePlaylist()),
+                MaterialPageRoute(builder: (context) => User()),
               );
             },
             style: TextButton.styleFrom(
@@ -111,9 +86,7 @@ class Sidebar extends StatelessWidget {
               ),
             ),
             child: Column(
-              children: [
-                Icon(Icons.playlist_add, color: Colors.white, size: 24),
-              ],
+              children: [Icon(Icons.person, color: Colors.white, size: 24)],
             ),
           ),
           Divider(

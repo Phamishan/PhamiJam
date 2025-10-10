@@ -83,7 +83,7 @@ class _InterfaceState extends State<Interface> {
             ),
           ),
           SizedBox(
-            height: 48, // Adjust as needed for your controls
+            height: 48,
             child: Stack(
               alignment: Alignment.center,
               children: [
@@ -93,8 +93,8 @@ class _InterfaceState extends State<Interface> {
                   child: Padding(
                     padding: EdgeInsets.only(left: 10),
                     child: SizedBox(
-                      width: 220, // Adjust as needed
-                      height: 24, // Set a height for the marquee
+                      width: 220,
+                      height: 24,
                       child: Marquee(
                         text: "${widget.artist} - ${widget.songName}",
                         style: TextStyle(

@@ -45,18 +45,26 @@ class _HomeState extends State<Home> {
                             decoration: InputDecoration(
                               hintText: 'Search',
                               hintStyle: TextStyle(
-                                color: Colors.white.withAlpha(230),
+                                color: Colors.white.withAlpha(200),
+                                fontSize: 15,
                               ),
                               filled: true,
                               fillColor: Color.fromARGB(16, 217, 213, 207),
                               contentPadding: EdgeInsets.symmetric(
-                                horizontal: 16,
+                                horizontal: 18,
                                 vertical: 14,
                               ),
                               border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
+                                borderRadius: BorderRadius.circular(12),
                                 borderSide: BorderSide(
                                   color: Colors.white,
+                                  width: 1.0,
+                                ),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                borderSide: BorderSide(
+                                  color: Colors.white54,
                                   width: 1.0,
                                 ),
                               ),

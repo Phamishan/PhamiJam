@@ -23,6 +23,9 @@ dependencies:
     just_audio_windows: ^0.2.2
     audio_metadata_reader: ^1.4.1
     marquee: ^2.2.3
+    shared_preferences: ^2.5.3
+    flutter_secure_storage: ^9.2.4
+    file_picker: ^6.1.1
 
 dev_dependencies:
     flutter_test:

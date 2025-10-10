@@ -3,12 +3,16 @@ import 'package:phamijam/components/interface.dart';
 import 'package:phamijam/components/sidebar.dart';
 import 'dart:io';
 import 'dart:async';
+import 'dart:convert';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:audio_metadata_reader/audio_metadata_reader.dart';
 import 'package:phamijam/models/playback_model.dart';
 import 'package:provider/provider.dart';
 import 'package:phamijam/components/audio_player_singleton.dart';
+import 'package:phamijam/controllers/user.dart';
+import 'package:phamijam/pages/login.dart';
 
 class User extends StatefulWidget {
   const User({super.key});
@@ -18,10 +22,13 @@ class User extends StatefulWidget {
 }
 
 class _UserState extends State<User> {
+  final FlutterSecureStorage _secureStorage = const FlutterSecureStorage();
   List<String> artistName = [];
   List<String> songName = [];
   List<String> songPaths = [];
   int? _currentlyPlayingIndex;
+  String? username;
+  bool _loadingUsername = true;
 
   StreamSubscription<Duration>? _positionSubscription;
   StreamSubscription<PlayerState>? _playerStateSubscription;
@@ -40,7 +47,51 @@ class _UserState extends State<User> {
     player.durationStream.listen((duration) {
       playback.setDuration(duration);
     });
+    _fetchUserInfo();
     _scanFilesPressed();
+  }
+
+  Future<void> _fetchUserInfo() async {
+    setState(() {
+      _loadingUsername = true;
+    });
+    String? token;
+    try {
+      token = await _secureStorage.read(key: 'token');
+    } catch (e) {
+      debugPrint('Error reading token from secure storage: $e');
+    }
+    if (token == null) {
+      setState(() {
+        _loadingUsername = false;
+      });
+      return debugPrint('Error: No token found');
+    }
+    try {
+      final response = await HttpClient().getUrl(
+        Uri.parse('http://localhost:3333/getUserInfo'),
+      );
+      response.headers.set('Authorization', 'Bearer $token');
+      final httpResponse = await response.close();
+      if (httpResponse.statusCode == 200) {
+        final contents = await httpResponse.transform(utf8.decoder).join();
+        final Map<String, dynamic> json = jsonDecode(contents);
+        if (json['ok'] == true &&
+            json['user'] != null &&
+            json['user']['username'] != null) {
+          setState(() {
+            username = json['user']['username'];
+            _loadingUsername = false;
+          });
+          return;
+        }
+      }
+    } catch (e) {
+      debugPrint('Error fetching user info: $e');
+    }
+    setState(() {
+      _loadingUsername = false;
+    });
   }
 
   @override
@@ -49,6 +100,14 @@ class _UserState extends State<User> {
     _playerStateSubscription?.cancel();
     player.dispose();
     super.dispose();
+  }
+
+  void _logoutPressed() {
+    context.read<UserController>().logout();
+    Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute(builder: (context) => Login()),
+      (route) => false,
+    );
   }
 
   Future<void> _scanFilesPressed() async {
@@ -180,13 +239,23 @@ class _UserState extends State<User> {
                             children: [
                               Padding(
                                 padding: EdgeInsets.all(10),
-                                child: Text(
-                                  "Username",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 20,
-                                  ),
-                                ),
+                                child:
+                                    _loadingUsername
+                                        ? SizedBox(
+                                          width: 24,
+                                          height: 24,
+                                          child: CircularProgressIndicator(
+                                            color: Colors.white,
+                                            strokeWidth: 2.5,
+                                          ),
+                                        )
+                                        : Text(
+                                          username ?? "Username",
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 20,
+                                          ),
+                                        ),
                               ),
                               Padding(
                                 padding: EdgeInsets.all(10),
@@ -208,7 +277,9 @@ class _UserState extends State<User> {
                                       ),
                                     ),
                                     IconButton(
-                                      onPressed: () => debugPrint("Previous"),
+                                      onPressed: () {
+                                        _logoutPressed();
+                                      },
                                       icon: Icon(
                                         Icons.logout,
                                         color: Colors.white,
