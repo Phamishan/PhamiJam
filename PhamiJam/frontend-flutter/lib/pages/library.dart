@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:phamijam/components/interface.dart';
 import 'package:phamijam/components/sidebar.dart';
+import 'package:phamijam/result.dart';
 import 'package:provider/provider.dart';
 import 'package:phamijam/models/playback_model.dart';
 import 'package:phamijam/components/audio_player_singleton.dart';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:phamijam/controllers/user.dart';
 
 class Library extends StatefulWidget {
   const Library({super.key});
@@ -16,9 +18,6 @@ class Library extends StatefulWidget {
 }
 
 class _LibraryState extends State<Library> {
-  List<String> playlistName = [];
-  List<String> playlistDescription = [];
-  List<String?> playlistCoverPaths = [];
   int? _currentlyPlayingIndex;
 
   bool get isDesktop {
@@ -30,7 +29,7 @@ class _LibraryState extends State<Library> {
     }
   }
 
-  void _showCreatePlaylistDialog() {
+  void _showCreatePlaylistDialog(UserController userCtrl) {
     final _formKey = GlobalKey<FormState>();
     String title = '';
     String description = '';
@@ -104,14 +103,22 @@ class _LibraryState extends State<Library> {
             ),
             ElevatedButton(
               child: Text('Create'),
-              onPressed: () {
+              onPressed: () async {
                 if (_formKey.currentState!.validate()) {
-                  setState(() {
-                    playlistName.add(title);
-                    playlistDescription.add(description);
-                    playlistCoverPaths.add(coverImagePath);
-                  });
-                  Navigator.of(context).pop();
+                  // Use UserController to create playlist (posts to backend & updates controller lists)
+                  final res = await userCtrl.createPlaylist(
+                    title,
+                    description,
+                    coverImagePath,
+                  );
+                  if (res is Ok) {
+                    Navigator.of(context).pop();
+                  } else if (res is Err) {
+                    final message = (res as Err).message;
+                    ScaffoldMessenger.of(
+                      context,
+                    ).showSnackBar(SnackBar(content: Text(message)));
+                  }
                 }
               },
             ),
@@ -124,6 +131,10 @@ class _LibraryState extends State<Library> {
   @override
   Widget build(BuildContext context) {
     final playback = Provider.of<PlaybackModel>(context);
+    final userCtrl = Provider.of<UserController>(context);
+    final playlistName = userCtrl.playlistName;
+    final playlistDescription = userCtrl.playlistDescription;
+    final playlistCoverPaths = userCtrl.playlistCoverPaths;
     final double sidebarWidth = 150;
 
     return Scaffold(
@@ -184,7 +195,7 @@ class _LibraryState extends State<Library> {
                         ),
                         SizedBox(width: 5),
                         IconButton(
-                          onPressed: _showCreatePlaylistDialog,
+                          onPressed: () => _showCreatePlaylistDialog(userCtrl),
                           icon: Icon(
                             Icons.playlist_add,
                             color: Colors.white,
@@ -260,11 +271,17 @@ class _LibraryState extends State<Library> {
                                           ],
                                         );
                                         if (selected == 'delete') {
-                                          setState(() {
-                                            playlistName.removeAt(index);
-                                            playlistDescription.removeAt(index);
-                                            playlistCoverPaths.removeAt(index);
-                                          });
+                                          final res = await userCtrl
+                                              .deletePlaylist(index);
+                                          if (res is Err) {
+                                            final message =
+                                                (res as Err).message;
+                                            ScaffoldMessenger.of(
+                                              context,
+                                            ).showSnackBar(
+                                              SnackBar(content: Text(message)),
+                                            );
+                                          }
                                         }
                                       },
                                       child: Container(

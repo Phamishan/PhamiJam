@@ -134,4 +134,160 @@ class Client {
       return Err("Network error: $e");
     }
   }
+
+  Future<Result<Null>> createPlaylist(
+    String title,
+    String description,
+    String token, {
+    String coverArt = "string",
+  }) async {
+    try {
+      final body = json.encode({
+        "title": title,
+        "description": description,
+        "coverArt": coverArt,
+      });
+
+      final res = await http.post(
+        Uri.parse("$apiUrl/createPlaylist"),
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer $token",
+        },
+        body: body,
+      );
+
+      if (res.statusCode != 200) {
+        final resData = json.decode(res.body);
+        final message =
+            (resData is Map<String, dynamic> && resData["message"] != null)
+                ? resData["message"]
+                : "Unknown error occurred";
+        return Err(message);
+      }
+      return Ok(null);
+    } catch (e) {
+      debugPrint("createPlaylist error: $e");
+      return Err("Network error: $e");
+    }
+  }
+
+  Future<Result<List<Map<String, dynamic>>>> getPlaylists(String token) async {
+    try {
+      final res = await http.get(
+        Uri.parse("$apiUrl/getPlaylists"),
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer $token",
+        },
+      );
+      if (res.statusCode != 200) {
+        final resData = json.decode(res.body);
+        final message =
+            (resData is Map<String, dynamic> && resData["message"] != null)
+                ? resData["message"]
+                : "Unknown error occurred";
+        return Err(message);
+      }
+      final resData = json.decode(res.body);
+      if (resData is! Map<String, dynamic> || resData["ok"] != true) {
+        final message = resData["message"] ?? "Unknown error occurred";
+        return Err(message);
+      }
+      final playlists =
+          (resData["playlists"] as List<dynamic>?)
+              ?.map((e) => Map<String, dynamic>.from(e as Map))
+              .toList();
+      return Ok(playlists ?? []);
+    } catch (e) {
+      debugPrint("getPlaylists error: $e");
+      return Err("Network error: $e");
+    }
+  }
+
+  Future<Result<Null>> deletePlaylist(String token, String id) async {
+    try {
+      final res = await http.delete(
+        Uri.parse("$apiUrl/deletePlaylist/$id"),
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer $token",
+        },
+      );
+
+      final contentType = res.headers['content-type'] ?? '';
+
+      // If server returned non-JSON (HTML error page), surface a clear error instead of json.decode crash
+      if (!contentType.contains('application/json')) {
+        if (res.statusCode == 200) {
+          return Ok(null); // allow success even if server omitted JSON
+        }
+        return Err('Server error ${res.statusCode}: ${res.body}');
+      }
+
+      // Safe JSON parse
+      final resData = json.decode(res.body);
+      if (res.statusCode != 200) {
+        final message =
+            (resData is Map<String, dynamic> && resData["message"] != null)
+                ? resData["message"]
+                : "Unknown error occurred";
+        return Err(message);
+      }
+
+      if (resData is! Map<String, dynamic> || resData["ok"] != true) {
+        final message = resData["message"] ?? "Unknown error occurred";
+        return Err(message);
+      }
+
+      return Ok(null);
+    } catch (e) {
+      debugPrint("deletePlaylist error: $e");
+      return Err("Network error: $e");
+    }
+  }
+
+  Future<Result<Null>> addSongToPlaylist(
+    String token,
+    String playlistId,
+    String songId,
+  ) async {
+    try {
+      final body = json.encode({"playlistId": playlistId, "songId": songId});
+
+      final res = await http.post(
+        Uri.parse("$apiUrl/addSongToPlaylist"),
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer $token",
+        },
+        body: body,
+      );
+
+      if (res.statusCode != 200) {
+        // attempt to parse error body if JSON
+        try {
+          final resData = json.decode(res.body);
+          final message =
+              (resData is Map<String, dynamic> && resData["message"] != null)
+                  ? resData["message"]
+                  : "Unknown error occurred";
+          return Err(message);
+        } catch (_) {
+          return Err("Server error ${res.statusCode}: ${res.body}");
+        }
+      }
+
+      final resData = json.decode(res.body);
+      if (resData is! Map<String, dynamic> || resData["ok"] != true) {
+        final message = resData["message"] ?? "Unknown error occurred";
+        return Err(message);
+      }
+
+      return Ok(null);
+    } catch (e) {
+      debugPrint("addSongToPlaylist error: $e");
+      return Err("Network error: $e");
+    }
+  }
 }
