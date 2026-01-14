@@ -1,3 +1,4 @@
 {
-    "cSpell.words": ["phamijam"]
+    "cSpell.words": ["phamijam"],
+    "cmake.ignoreCMakeListsMissing": true
 }
